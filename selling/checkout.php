@@ -1,5 +1,20 @@
 <?php include "header.php"; 
-    ?>
+if(isset($_GET["action"]))
+{
+    if($_GET["action"] == "delete")
+    {
+        foreach($_SESSION["shopping_cart"] as $keys => $values)
+        {
+        if($values["item_id"] == $_GET["id"])
+        {
+        unset($_SESSION["shopping_cart"][$keys]);
+        echo '<script>alert("Item Removed")</script>';
+        echo '<script>window.location="checkout.php"</script>';
+        }
+        }
+    }
+}
+?>
     <!-- Hero Section Begin -->
     <section class="hero hero-normal">
         <div class="container">
@@ -78,6 +93,7 @@
     <!-- Breadcrumb Section End -->
     <!-- Shoping Cart Section Begin -->
     <section class="shoping-cart spad">
+    <form method="POST" action="save/add_order.php" >
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -94,74 +110,38 @@
                             </thead>
                             <tbody>
                                 <?php 
-
+                                if(isset($_SESSION["shopping_cart"])) {
+                                    foreach($_SESSION["shopping_cart"] as $keys => $values)
+                                    {
                                 ?>
                                 <tr>
                                     <td class="shoping__cart__item">
                                         <img src="img/cart/cart-1.jpg" alt="">
-                                        <h5>Vegetable’s Package</h5>
+                                        <h5><?php echo $_SESSION["shopping_cart"][$keys]['item_name']; ?></h5>
                                     </td>
                                     <td class="shoping__cart__price">
-                                        $55.00
+                                        <?php echo $_SESSION["shopping_cart"][$keys]['item_price']; ?>
                                     </td>
                                     <td class="shoping__cart__quantity">
                                         <div class="quantity">
                                             <div class="pro-qty">
-                                                <input type="text" value="1">
+                                                <input type="text" value="<?php echo $_SESSION["shopping_cart"][$keys]['item_quantity'] ?>">
                                             </div>
                                         </div>
                                     </td>
                                     <td class="shoping__cart__total">
-                                        $110.00
+                                        <?php echo ($_SESSION["shopping_cart"][$keys]['item_price']*$_SESSION["shopping_cart"][$keys]['item_quantity']); ?>
                                     </td>
                                     <td class="shoping__cart__item__close">
-                                        <span class="icon_close"></span>
+                                        <a href="<?php echo "checkout.php?action=delete&id=".$_SESSION["shopping_cart"][$keys]['item_id']; ?>"><span class="icon_close"></span></a>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="shoping__cart__item">
-                                        <img src="img/cart/cart-2.jpg" alt="">
-                                        <h5>Fresh Garden Vegetable</h5>
-                                    </td>
-                                    <td class="shoping__cart__price">
-                                        $39.00
-                                    </td>
-                                    <td class="shoping__cart__quantity">
-                                        <div class="quantity">
-                                            <div class="pro-qty">
-                                                <input type="text" value="1">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="shoping__cart__total">
-                                        $39.99
-                                    </td>
-                                    <td class="shoping__cart__item__close">
-                                        <span class="icon_close"></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="shoping__cart__item">
-                                        <img src="img/cart/cart-3.jpg" alt="">
-                                        <h5>Organic Bananas</h5>
-                                    </td>
-                                    <td class="shoping__cart__price">
-                                        $69.00
-                                    </td>
-                                    <td class="shoping__cart__quantity">
-                                        <div class="quantity">
-                                            <div class="pro-qty">
-                                                <input type="text" value="1">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="shoping__cart__total">
-                                        $69.99
-                                    </td>
-                                    <td class="shoping__cart__item__close">
-                                        <span class="icon_close"></span>
-                                    </td>
-                                </tr>
+                                <?php
+                                    $total_price = 0;
+                                    $total_price = $total_price + $_SESSION["shopping_cart"][$keys]['item_price'];
+                                    }
+                                }
+                                ?>
                             </tbody>
                         </table>
                     </div>
@@ -170,8 +150,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="shoping__cart__btns">
-                        <a href="#" class="primary-btn cart-btn">Alışverişe Devam Et</a>
-                        <a href="#" class="primary-btn cart-btn cart-btn-right"><span class="icon_loading"></span>Güncelle</a>
+                        <a href="../index.php" class="primary-btn cart-btn">Alışverişe Devam Et</a>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -180,7 +159,7 @@
                             <h5>İndirim Kodu</h5>
                             <form action="#">
                                 <input type="text" placeholder="İndirim Kodu Giriniz">
-                                <button type="submit" class="site-btn">İndirim Uygula</button>
+                                <button type="submit" class="btn btn-success">İndirim Uygula</button>
                             </form>
                         </div>
                     </div>
@@ -189,13 +168,14 @@
                     <div class="shoping__checkout">
                         <h5>Toplam Tutar</h5>
                         <ul>
-                            <li>Toplam <span>$454.98</span></li>
+                            <li>Toplam <span><?php echo $total_price; ?></span></li>
                         </ul>
-                        <a href="add_order.php" name="checkout" class="primary-btn">İLERLE</a>
+                        <button name="checkout" type="submit" class="btn btn-success">İLERLE</button>
                     </div>
                 </div>
             </div>
         </div>
+    </form>
     </section>
     <!-- Shoping Cart Section End -->
 <?php include "footer.php"; ?>

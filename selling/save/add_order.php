@@ -36,7 +36,7 @@ if (isset($_POST['checkout'])) {
         }
     }
 }
-/* Customer Info */
+// Customer Info 
 if (isset($_POST['customer'])) {
     if(isset($_SESSION["shopping_cart"]))
     {
@@ -63,18 +63,20 @@ if (isset($_POST['message'])) {
         foreach($_SESSION["shopping_cart"] as $keys => $values)
         {       
                 if ($_POST['CARD_ID'] != 0) {
-                    $sql_cart    = 'SELECT * FROM cart_note WHERE ID = '.$_POST['CARD_ID'];
+                    echo "<script>alert('asdad".$_POST['CARD_ID']."')</script>";
+                    $sql_cart    = 'SELECT * FROM card_note WHERE ID = '.$_POST['CARD_ID'];
                     $result_cart = mysqli_query($conn,$sql_cart);
                     $row_cart    = mysqli_fetch_assoc($result_cart);
                     $card_note   = $row_cart['MESSAGE'];
                 } else {
                     $card_note = $_POST['CARD_NOTE'];
                 }
-                $sql_orders = 'UPDATE orders SET CARD_NOTE_ID = "'.$_POST['CARD_ID'].'", CUSTOM_CARD_NOTE = '.$card_note.', CUSTOM_CARD_NAME = '.$_POST['CART_NAME'].',
+                $sql_orders = 'UPDATE orders SET CARD_NOTE_ID = "'.$_POST['CARD_ID'].'", CUSTOM_CARD_NOTE = "'.$card_note.'", CARD_NOTE_NAME = "'.$_POST['CARD_NAME'].'",
                 STATUS = "CUSTOMER_INFORMATION"
-                WHERE REFERENCE_NO = '.$values['item_reference_no'].'';
+                WHERE REFERENCE_NO = "'.$values['item_reference_no'].'"';
                 $result_orders = mysqli_query($conn,$sql_orders);
                 if ($result_orders==0){
+                    echo $sql_orders;
                     echo "Sipariş başlatılamadı, kontrol ediniz.";
                 }else{
                     echo "Başarıyla eklendi";
@@ -89,7 +91,6 @@ if (isset($_POST['invoice'])) {
     {
         foreach($_SESSION["shopping_cart"] as $keys => $values)
         {   
-
             if ($_POST['INVOICE_TYPE']==0) {
                 $sql_orders = 'UPDATE orders SET SENDER_NAME = "'.$_POST['SENDER_NAME'].'", SENDER_PHONE = "'.$_POST['SENDER_PHONE'].'", SENDER_EMAIL = "'.$_POST['SENDER_EMAIL'].'",
                 INVOICE_TYPE = '.$_POST['INVOICE_TYPE'].', 	INVOICE_IDENTY_NO = "'.$_POST['INVOICE_IDENTY_NO'].'", INVOICE_ADDRESS = "'.$_POST['INVOICE_ADDRESS'].'", STATUS = "INVOICE_INFORMATION"

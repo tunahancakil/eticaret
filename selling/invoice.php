@@ -4,27 +4,24 @@
         <div class="container">
             <div class="checkout__form">
                 <h4>Fatura Detayı</h4>
-                <form action="save/add_order.php" action="POST">
+                <form action="save/add_order.php" method="POST">
                     <div class="row">
                         <div class="col-lg-8 col-md-6">
                             <div class="checkout__input">
                                 <p>Ad Soyad<span>*</span></p>
-                                <input type="text" name="SENDER_NAME"
-                                placeholder="Posta Kodu">
+                                <input type="text" name="SENDER_NAME" placeholder="Ad Soyad">
                             </div>
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>Telefon<span>*</span></p>
-                                        <input type="phone" name="SENDER_PHONE"
-                                        placeholder="Telefon">
+                                        <input type="phone" name="SENDER_PHONE" placeholder="Telefon">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>E-Posta Adersi<span>*</span></p>
-                                        <input type="text" name="SENDER_EMAIL" 
-                                        placeholder="Email">
+                                        <input type="text" name="SENDER_EMAIL" placeholder="Email">
                                     </div>
                                 </div>
                             </div>
@@ -47,15 +44,13 @@
                                     <div class="col-lg-6">
                                         <div class="checkout__input">
                                             <p>T.C. Kimlik Numarası<span>*</span></p>
-                                            <input type="phone" name="INVOICE_IDENTY_NO"
-                                            placeholder="Telefon">
+                                            <input type="phone" name="INVOICE_IDENTY_NO" placeholder="Kimlik Numarası">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="checkout__input">
                                             <p>Fatura Adersi<span>*</span></p>
-                                            <input type="text" name="INVOICE_ADDRESS" 
-                                            placeholder="Email">
+                                            <input type="text" name="INVOICE_ADDRESS" placeholder="Fatura Adersi">
                                         </div>
                                     </div>
                                 </div>
@@ -65,8 +60,7 @@
                                     <div class="col-lg-6">
                                         <div class="checkout__input">
                                             <p>Firma Adı<span>*</span></p>
-                                            <input type="phone" name="SENDER_PHONE"
-                                            placeholder="Telefon">
+                                            <input type="phone" name="COMPANY_NAME" placeholder="Firma Adı">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -80,15 +74,13 @@
                                     <div class="col-lg-6">
                                         <div class="checkout__input">
                                             <p>Vergi Numarası<span>*</span></p>
-                                            <input type="phone" name="SENDER_PHONE"
-                                            placeholder="Telefon">
+                                            <input type="phone" name="COMPANY_INVOICE_IDENTY_NO" placeholder="Vergi Numarası">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="checkout__input">
                                             <p>Vergi Dairesi<span>*</span></p>
-                                            <input type="text" name="SENDER_EMAIL" 
-                                            placeholder="Email">
+                                            <input type="text" name="TAX_OFFICE" placeholder="Vergi Dairesi">
                                         </div>
                                     </div>
                                 </div>
@@ -99,13 +91,23 @@
                                 <h4>Siparişin</h4>
                                 <div class="checkout__order__products">Ürünler <span>Toplam</span></div>
                                 <ul>
-                                    <li>Vegetable’s Package <span>$75.99</span></li>
-                                    <li>Fresh Vegetable <span>$151.99</span></li>
-                                    <li>Organic Bananas <span>$53.99</span></li>
+                                <?php 
+                                if(isset($_SESSION["shopping_cart"])) {
+                                    foreach($_SESSION["shopping_cart"] as $keys => $values)
+                                    {
+                                            $_SESSION["shopping_cart"][$keys]['item_quantity'] = $_SESSION["shopping_cart"][$keys]['item_quantity'] + 1;
+                                ?>
+                                    <li><?php echo $_SESSION["shopping_cart"][$keys]['item_name']; ?><span><?php echo $_SESSION["shopping_cart"][$keys]['item_price']; ?>TL</span></li>
+                                <?php
+                                    $total_price = 0;
+                                    $total_price = $total_price + $_SESSION["shopping_cart"][$keys]['item_price'];
+                                    }
+                                }
+                                ?>
                                 </ul>
-                                <div class="checkout__order__subtotal">Subtotal <span>$750.99</span></div>
-                                <div class="checkout__order__total">Total <span>$750.99</span></div>
-                                <button type="submit" name="invoice" class="site-btn">İLERLE</button>
+                                <div class="checkout__order__subtotal">Ara Toplam <span>$750.99</span></div>
+                                <div class="checkout__order__total">Toplam <span><?php echo $total_price ?></span></div>
+                                <button name="invoice" type="submit" class="btn btn-success">İLERLE</button>
                             </div>
                         </div>
                     </div>
@@ -113,19 +115,5 @@
             </div>
         </div>
     </section>
-    <script>
-            $(document).ready(function () {
-                $(".faturatipilinsahis").on("click", function () {
-                    $("#d").val("1");
-                    $("#sahis").css("display", "block");
-                    $("#firma").css("display", "none");
-                });
-                $(".faturatipilinfirma").on("click", function () {
-                    $("#faturatipi").val("2");
-                    $("#sahis").css("display", "none");
-                    $("#firma").css("display", "block");
-                });
-            });
-    </script>
     <!-- Checkout Section End -->
 <?php include "footer.php"; ?>

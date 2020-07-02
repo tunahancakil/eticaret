@@ -6,10 +6,9 @@ if(isset($_GET['id'])) {
 }
 if(isset($_POST["add_to_cart"]))
 {   
-    echo "<script>alert('Hello! I am an alert box!!');</script>";
     if(isset($_SESSION["shopping_cart"]))
         {
-            echo "<script>alert('2Hello! I am an alert box!!');</script>";
+            echo "<script>alert('Ürününüz sepete eklendi');</script>";
             $item_array_id = array_column($_SESSION["shopping_cart"], "item_id");
             if(!in_array($_GET["id"], $item_array_id))
             {
@@ -21,8 +20,8 @@ if(isset($_POST["add_to_cart"]))
             'item_delivery_clock'      =>  "12",
             'item_delivery_city'       =>  "İstanbul",
             'item_delivery_district'   =>  "Tümü",
-            'item_is_delivery'         =>  $_POST["hidden_is_delivery"],
-            'item_quantity'            =>  $_POST["quantity"],
+            'item_is_delivery'         =>  "Mahmut",
+            'item_quantity'            =>  "1",
             'item_image'               =>  $_POST["productImage"],
             'item_reference_no'        =>  "",
             /*
@@ -45,6 +44,28 @@ if(isset($_POST["add_to_cart"]))
             );
             $_SESSION["shopping_cart"][$count] = $item_array;
             }
+            else
+            {   
+                foreach($_SESSION["shopping_cart"] as $keys => $values)
+                {   
+                    if ($_GET["id"] == $values['item_id']) {
+                        $_SESSION["shopping_cart"][$keys]['item_quantity'] = $_SESSION["shopping_cart"][$keys]['item_quantity'] + 1;
+                        echo '<script>window.location="product.php?id='.$_GET["id"].'"</script>';
+                    }
+                }
+            }
+    
+        }
+    else
+        {
+            $item_array = array(
+            'item_id'           =>  $_GET["id"],
+            'item_name'         =>  $_POST["hidden_name"],
+            'item_price'        =>  $_POST["hidden_price"],
+            'item_quantity'     =>  $_POST["quantity"],
+            'item_image'        =>  $_POST["productImage"]
+            );
+            $_SESSION["shopping_cart"][0] = $item_array;
         }
 }
 ?>
